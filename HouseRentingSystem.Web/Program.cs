@@ -1,9 +1,9 @@
 namespace HouseRentingSystem.Web;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using HouseRentingSystem.Data;
+using HouseRentingSystem.Data.Models;
 
 public class Program
 {
@@ -13,14 +13,14 @@ public class Program
 
         // Add services to the container.
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddDbContext<HouseRentingSystemDbContext>(options =>
             options.UseSqlServer(connectionString));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         {
             options.SignIn.RequireConfirmedAccount = false;
         })
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<HouseRentingSystemDbContext>();
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();
