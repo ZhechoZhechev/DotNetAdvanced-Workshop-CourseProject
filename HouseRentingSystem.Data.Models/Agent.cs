@@ -7,6 +7,11 @@ using static HouseRentingSystem.Common.EntityValidationConstants.AgentConstants;
 
 public class Agent
 {
+    public Agent()
+    {
+        this.ManagedHouses = new HashSet<House>();
+    }
+
     [Key]
     public Guid Id { get; set; }
 
@@ -18,4 +23,6 @@ public class Agent
     [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
     public virtual ApplicationUser User { get; set; } = null!;
+
+    public virtual ICollection<House> ManagedHouses { get; set; }
 }
