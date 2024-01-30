@@ -10,6 +10,10 @@ public class HouseEntityConfiguration : IEntityTypeConfiguration<House>
     public void Configure(EntityTypeBuilder<House> builder)
     {
         builder
+            .Property(h => h.CreatedOn)
+            .HasDefaultValue(DateTime.UtcNow);
+
+        builder
             .HasOne(c => c.Category)
             .WithMany(h => h.Houses)
             .HasForeignKey(h => h.CategoryId)
