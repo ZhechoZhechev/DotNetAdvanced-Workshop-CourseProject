@@ -6,6 +6,11 @@ using static HouseRentingSystem.Common.EntityValidationConstants.HouseConstants;
 
 public class House
 {
+    public House()
+    {
+        this.Id = Guid.NewGuid();
+    }
+
     [Key]
     public Guid Id { get; set; }
 
