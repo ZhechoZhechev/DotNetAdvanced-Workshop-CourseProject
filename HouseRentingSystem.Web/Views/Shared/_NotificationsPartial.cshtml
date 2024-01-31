@@ -1,0 +1,34 @@
+﻿@using static HouseRentingSystem.Common.NotificationsMessages;
+
+@if (TempData.ContainsKey(ErrorMessage))
+{
+    <script>
+        toastr.options.positionClass = 'toast-top-center';
+        toastr.error('@TempData[ErrorMessage]');
+    </script>
+}
+
+@if (TempData.ContainsKey(WarningMessage))
+{
+    <script>
+        toastr.options.positionClass = 'toast-top-center';
+        toastr.warning('@TempData[WarningMessage]');
+    </script>
+}
+
+@if (TempData.ContainsKey(InfoMessage))
+{
+    <script>
+        toastr.options.positionClass = 'toast-top-center';
+        toastr.info('@TempData[InfoMessage]');
+    </script>
+}
+
+@if (TempData.ContainsKey(SuccessMessage))
+{
+    <script>
+        toastr.options.positionClass = 'toast-top-center';
+        toastr.success('@TempData[SuccessMessage]');
+    </script>
+}
+ 
