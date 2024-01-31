@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
+using HouseRentingSystem.Web.Infrastructure.Extensions;
+using HouseRentingSystem.Services.Interfaces;
 
 public class Program
 {
@@ -30,7 +32,9 @@ public class Program
                 builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
         })
             .AddEntityFrameworkStores<HouseRentingSystemDbContext>();
+
         builder.Services.AddControllersWithViews();
+        builder.Services.AddServicesReflection(typeof(IHouseService));
 
         var app = builder.Build();
 
