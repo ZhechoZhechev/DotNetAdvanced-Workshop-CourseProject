@@ -17,6 +17,10 @@ public class AgentController : Controller
         this.agentService = agentService;
     }
 
+    /// <summary>
+    /// Used to become and agent. If you are already an agent toastr JS library used to pop a message.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Become() 
     {

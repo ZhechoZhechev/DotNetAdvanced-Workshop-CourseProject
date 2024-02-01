@@ -9,8 +9,8 @@ public static class WebApplicationBuilderExtensions
     /// <summary>
     /// Finds all service interfaces and service types and registers them in the dependency injection container
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="serviceType"></param>
+    /// <param name="services">Services collection</param>
+    /// <param name="serviceType">The type we are looking for</param>
     /// <exception cref="InvalidOperationException"></exception>
     public static void AddServicesReflection(this IServiceCollection services, Type serviceType)
     {
