@@ -1,5 +1,7 @@
 ﻿using HouseRentingSystem.Data;
+using HouseRentingSystem.Data.Models;
 using HouseRentingSystem.Services.Interfaces;
+using HouseRentingSystem.Web.ViewModels.Agent;
 using Microsoft.EntityFrameworkCore;
 
 namespace HouseRentingSystem.Services;
@@ -13,9 +15,33 @@ public class AgentService : IAgentService
         this.dbContext = dbContext;
     }
 
-    public async Task<bool> AgentExistsByUserId(string userId)
+    public async Task<bool> AgentExistsByPhoneNumberAsync(string phoneNumber)
+    {
+        return await dbContext.Agents
+            .AnyAsync(a => a.PhoneNumber == phoneNumber);
+    }
+
+    public async Task<bool> AgentExistsByUserIdAsync(string userId)
     {
         return await dbContext.Agents
             .AnyAsync(a => a.UserId.ToString() == userId);
+    }
+
+    public async Task CreateAgentAsync(string userId, BecomeAgentFormModel model)
+    {
+        var newAgent = new Agent
+        {
+            UserId = Guid.Parse(userId),
+            PhoneNumber = model.PhoneNumber
+        };
+
+        await dbContext.Agents.AddAsync(newAgent);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> UserHasRentsAsync(string userId)
+    {
+        return await dbContext.Houses
+            .AnyAsync(u => u.RenterId.ToString() == userId);
     }
 }
