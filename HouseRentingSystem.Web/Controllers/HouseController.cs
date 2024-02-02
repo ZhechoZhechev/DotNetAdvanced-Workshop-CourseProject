@@ -56,7 +56,7 @@ public class HouseController : Controller
             return RedirectToAction("Become", "Agent");
         }
 
-        if (await categoryService.IfCategotyExistsAsync(model.CategoryId))
+        if (await categoryService.IfCategotyExistsAsync(model.CategoryId) == false)
         {
             ModelState.AddModelError(nameof(model.CategoryId), "Such categoty does not exist!");
         }
