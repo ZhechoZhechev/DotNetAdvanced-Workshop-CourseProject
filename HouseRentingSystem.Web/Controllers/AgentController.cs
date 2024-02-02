@@ -7,7 +7,6 @@ using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.ViewModels.Agent;
 using static HouseRentingSystem.Common.NotificationsMessages;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 [Authorize]
 public class AgentController : Controller
