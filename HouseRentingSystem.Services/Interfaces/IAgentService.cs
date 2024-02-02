@@ -11,4 +11,6 @@ public interface IAgentService
     Task<bool> UserHasRentsAsync(string userId);
 
     Task CreateAgentAsync(string userId, BecomeAgentFormModel model);
+
+    Task<string?> AgentIdByUserIdAsync(string userId);
 }

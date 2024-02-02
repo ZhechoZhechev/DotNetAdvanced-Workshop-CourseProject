@@ -27,6 +27,16 @@ public class AgentService : IAgentService
             .AnyAsync(a => a.UserId.ToString() == userId);
     }
 
+    public async Task<string?> AgentIdByUserIdAsync(string userId)
+    {
+        var agent = await dbContext.Agents
+            .FirstOrDefaultAsync(u => u.UserId.ToString() == userId);
+
+        if (agent == null) return null;
+
+        return agent.Id.ToString();    
+    }
+
     public async Task CreateAgentAsync(string userId, BecomeAgentFormModel model)
     {
         var newAgent = new Agent

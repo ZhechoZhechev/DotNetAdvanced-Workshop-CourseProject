@@ -30,4 +30,10 @@ public class CategoryService : ICategoryService
 
         return categories;
     }
+
+    public async Task<bool> IfCategotyExistsAsync(int categotyId)
+    {
+        return await dbContext.Categories
+            .AnyAsync(c => c.Id == categotyId);
+    }
 }
