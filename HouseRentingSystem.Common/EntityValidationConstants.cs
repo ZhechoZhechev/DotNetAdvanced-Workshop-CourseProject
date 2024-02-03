@@ -22,7 +22,7 @@ public static class EntityValidationConstants
         public const int ImgURLMaxLength = 2048;
 
         public const string PricePerMonthMinRange = "0";
-        public const string PricePerMonthMaxRange = "2000";
+        public const string PricePerMonthMaxRange = "5000";
     }
 
     public static class AgentConstants

@@ -17,6 +17,16 @@ public class CategoryService : ICategoryService
     {
         this.dbContext = dbContext;
     }
+
+    public async Task<ICollection<string>> AllCategoryNamesAsync()
+    {
+        var categoryNames = await dbContext.Categories
+            .Select(c => c.Name)
+            .ToListAsync();
+
+        return categoryNames;
+    }
+
     public async Task<ICollection<HouseCategoryFormModel>> AllHouseCategoriesAsync()
     {
         var categories = await dbContext.Categories
