@@ -7,6 +7,7 @@ using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.ViewModels.House;
 using static HouseRentingSystem.Common.NotificationsMessages;
+using HouseRentingSystem.Web.ViewModels.House.ServiceModels;
 
 [Authorize]
 public class HouseController : Controller
@@ -25,9 +26,15 @@ public class HouseController : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> All()
+    public async Task<IActionResult> All([FromQuery]AllHousesQueryModel houseQueryModel)
     {
-        return Ok();
+        HousesQueryServiceModel allHousesSrviceModel = await this.houseService.AllAsync(houseQueryModel);
+
+        houseQueryModel.TotalHouses = allHousesSrviceModel.TotalHousesCount;
+        houseQueryModel.Houses = allHousesSrviceModel.Houses;
+        houseQueryModel.Categories = await this.categoryService.AllCategoryNamesAsync();
+
+        return View(houseQueryModel);
     }
 
     [HttpGet]
