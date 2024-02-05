@@ -15,4 +15,8 @@ public interface IHouseService
     Task<ICollection<AllHousesViewModel>> AllHousesByAgentIdAsync(string agentId);
 
     Task<ICollection<AllHousesViewModel>> AllHousesByUserIdAsync(string userId);
+
+    Task<bool> HouseExistsByIdAsync(string houseId);
+
+    Task<HouseDetailsViewModel> HouseDetailsByIdAsync(string houseId);
 }

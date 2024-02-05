@@ -9,6 +9,7 @@ using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
 using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.ViewModels.Home;
+using HouseRentingSystem.Web.ViewModels.Agent;
 using HouseRentingSystem.Web.ViewModels.House;
 using HouseRentingSystem.Web.ViewModels.House.Enums;
 using HouseRentingSystem.Web.ViewModels.House.ServiceModels;
@@ -88,6 +89,7 @@ public class HouseService : IHouseService
         }
 
         var allHousesModel = agent.ManagedHouses
+            .Where(h => h.IsActive)
             .Select(h => new AllHousesViewModel()
             {
                 Id = h.Id.ToString(),
@@ -112,6 +114,7 @@ public class HouseService : IHouseService
         }
 
         var allRentedHousesForUser = user.RentedHouses
+            .Where(h => h.IsActive)
             .Select (h => new AllHousesViewModel() 
             {
                 Id = h.Id.ToString(),
@@ -141,6 +144,37 @@ public class HouseService : IHouseService
 
         await dbContext.Houses.AddAsync(house);
         await dbContext.SaveChangesAsync();
+    }
+
+    public Task<HouseDetailsViewModel> HouseDetailsByIdAsync(string houseId)
+    {
+        var houseModel = dbContext.Houses
+            .Where(x => x.Id.ToString() == houseId)
+            .Select(h => new HouseDetailsViewModel()
+            {
+                Id = h.Id.ToString(),
+                Title = h.Title,
+                Address = h.Address,
+                Description = h.Description,
+                ImageUrl = h.ImageUrl,
+                PricePerMonth = h.PricePerMonth,
+                Category = h.Category.Name,
+                Agent = new AgentInfoViewModel()
+                {
+                    Email = h.Agent.User.Email!,
+                    PhoneNumber = h.Agent.PhoneNumber
+
+                }
+            })
+            .FirstOrDefaultAsync();
+
+        return houseModel;
+    }
+
+    public async Task<bool> HouseExistsByIdAsync(string houseId)
+    {
+        return await dbContext.Houses
+            .AnyAsync(h => h.Id.ToString() == houseId);
     }
 
     public async Task<IEnumerable<IndexViewModel>> LastThreeHousesAsync()

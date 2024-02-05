@@ -108,4 +108,21 @@ public class HouseController : Controller
 
         return View(allHouses);
     }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Details(string id) 
+    {
+        var houseExists = await houseService.HouseExistsByIdAsync(id);
+
+        if (!houseExists)
+        {
+            TempData[InfoMessage] = "House does not exist!";
+            return RedirectToAction("All", "House");
+        }
+
+        var houseModel = await houseService.HouseDetailsByIdAsync(id);
+
+        return View(houseModel);
+    }
 }
