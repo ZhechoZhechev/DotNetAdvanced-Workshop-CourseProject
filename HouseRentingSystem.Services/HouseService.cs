@@ -54,6 +54,7 @@ public class HouseService : IHouseService
         };
 
         var allHousesModel = await housesQuery
+            .Where(h => h.IsActive)
             .Skip((queryModel.CurrentPage - 1) * queryModel.HousesPerPage)
             .Take(queryModel.HousesPerPage)
             .Select(h => new AllHousesViewModel
@@ -76,6 +77,54 @@ public class HouseService : IHouseService
         };
     }
 
+    public async Task<ICollection<AllHousesViewModel>> AllHousesByAgentIdAsync(string userId)
+    {
+        var agent = await dbContext.Agents
+            .Include(h => h.ManagedHouses)
+            .FirstOrDefaultAsync(a => a.UserId.ToString() == userId);
+        if (agent == null)
+        {
+            return null;
+        }
+
+        var allHousesModel = agent.ManagedHouses
+            .Select(h => new AllHousesViewModel()
+            {
+                Id = h.Id.ToString(),
+                Title = h.Title,
+                Address = h.Address,
+                ImageUrl = h.ImageUrl,
+                PricePerMonth = h.PricePerMonth,
+                IsRented = h.RenterId.HasValue
+            })
+            .ToList();
+
+        return allHousesModel;
+    }
+
+    public async Task<ICollection<AllHousesViewModel>> AllHousesByUserIdAsync(string userId)
+    {
+        var user = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+        if (user == null) 
+        {
+            return null; 
+        }
+
+        var allRentedHousesForUser = user.RentedHouses
+            .Select (h => new AllHousesViewModel() 
+            {
+                Id = h.Id.ToString(),
+                Title = h.Title,
+                Address = h.Address,
+                ImageUrl = h.ImageUrl,
+                PricePerMonth = h.PricePerMonth,
+                IsRented = h.RenterId.HasValue
+            })
+            .ToList();
+        return allRentedHousesForUser;
+    }
+
     public async Task CreateHouse(HouseFormModel model, string agentId)
     {
         var house = new House() 
@@ -86,6 +135,7 @@ public class HouseService : IHouseService
             ImageUrl = model.ImageUrl,
             PricePerMonth = model.PricePerMonth,
             CategoryId = model.CategoryId,
+            IsActive = true,
             AgentId = Guid.Parse(agentId)
         };
 
@@ -96,6 +146,7 @@ public class HouseService : IHouseService
     public async Task<IEnumerable<IndexViewModel>> LastThreeHousesAsync()
     {
         var lastThreeHouses = await this.dbContext.Houses
+            .Where(h => h.IsActive)
             .OrderByDescending(h => h.CreatedOn)
             .Take(3)
             .Select(h => new IndexViewModel

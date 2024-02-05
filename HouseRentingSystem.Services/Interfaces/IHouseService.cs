@@ -11,4 +11,8 @@ public interface IHouseService
     Task CreateHouse(HouseFormModel model, string agentId);
 
     Task<HousesQueryServiceModel> AllAsync(AllHousesQueryModel queryModel);
+
+    Task<ICollection<AllHousesViewModel>> AllHousesByAgentIdAsync(string agentId);
+
+    Task<ICollection<AllHousesViewModel>> AllHousesByUserIdAsync(string userId);
 }

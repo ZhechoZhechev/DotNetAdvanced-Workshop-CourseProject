@@ -13,7 +13,7 @@ public static class EntityValidationConstants
         public const int TitleMinLength = 10;
         public const int TitleMaxLength = 50;
 
-        public const int AddressMinLength = 50;
+        public const int AddressMinLength = 15;
         public const int AddressMaxLength = 150;
 
         public const int DesciptionMinLength = 50;

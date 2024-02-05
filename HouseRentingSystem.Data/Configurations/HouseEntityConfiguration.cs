@@ -4,11 +4,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using HouseRentingSystem.Data.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
 public class HouseEntityConfiguration : IEntityTypeConfiguration<House>
 {
     public void Configure(EntityTypeBuilder<House> builder)
     {
+        builder
+            .Property(h => h.IsActive)
+            .HasDefaultValue(true);
+
         builder
             .Property(h => h.CreatedOn)
             .HasDefaultValueSql("GETDATE()");
