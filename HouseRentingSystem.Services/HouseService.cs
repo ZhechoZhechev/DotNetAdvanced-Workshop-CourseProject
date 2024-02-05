@@ -46,11 +46,11 @@ public class HouseService : IHouseService
 
         housesQuery = queryModel.HouseSorting switch
         {
-            HouseSorting.Newest => dbContext.Houses.OrderBy(h => h.CreatedOn),
-            HouseSorting.Oldest => dbContext.Houses.OrderByDescending(h => h.CreatedOn),
-            HouseSorting.PriceAscending => dbContext.Houses.OrderBy(h => h.PricePerMonth),
-            HouseSorting.PriceDescending => dbContext.Houses.OrderByDescending(h => h.PricePerMonth),
-            HouseSorting.NotRentedFirst => dbContext.Houses.OrderBy(h => h.RenterId != null),
+            HouseSorting.Newest => housesQuery.OrderByDescending(h => h.CreatedOn),
+            HouseSorting.Oldest => housesQuery.OrderBy(h => h.CreatedOn),
+            HouseSorting.PriceAscending => housesQuery.OrderBy(h => h.PricePerMonth),
+            HouseSorting.PriceDescending => housesQuery.OrderByDescending(h => h.PricePerMonth),
+            _ => housesQuery.OrderBy(h => h.RenterId != null)
         };
 
         var allHousesModel = await housesQuery

@@ -11,7 +11,7 @@ public class HouseEntityConfiguration : IEntityTypeConfiguration<House>
     {
         builder
             .Property(h => h.CreatedOn)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasDefaultValueSql("GETDATE()");
 
         builder
             .HasOne(c => c.Category)
