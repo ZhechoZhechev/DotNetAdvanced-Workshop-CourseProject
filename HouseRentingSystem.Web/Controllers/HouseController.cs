@@ -26,7 +26,7 @@ public class HouseController : Controller
     }
 
     [AllowAnonymous]
-    public async Task<IActionResult> All([FromQuery]AllHousesQueryModel houseQueryModel)
+    public async Task<IActionResult> All([FromQuery] AllHousesQueryModel houseQueryModel)
     {
         HousesQueryServiceModel allHousesSrviceModel = await this.houseService.AllAsync(houseQueryModel);
 
@@ -74,10 +74,11 @@ public class HouseController : Controller
             return View(model);
         }
 
+        string houseId;
         try
         {
             var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
-            await this.houseService.CreateHouse(model, agentId!);
+            houseId = await this.houseService.CreateHouseAndReturnHouseIdAsync(model, agentId!);
         }
         catch (Exception)
         {
@@ -87,17 +88,17 @@ public class HouseController : Controller
             return View(model);
         }
 
-        return RedirectToAction("All", "House");
+        return RedirectToAction("Details", "House", new { id = houseId });
     }
 
     [HttpGet]
-    public async Task<IActionResult> Mine() 
+    public async Task<IActionResult> Mine()
     {
         IEnumerable<AllHousesViewModel> allHouses;
 
         var userId = this.User.GetId();
 
-        if (await agentService.AgentExistsByUserIdAsync(userId)) 
+        if (await agentService.AgentExistsByUserIdAsync(userId))
         {
             allHouses = await houseService.AllHousesByAgentIdAsync(userId);
         }
@@ -111,7 +112,7 @@ public class HouseController : Controller
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> Details(string id) 
+    public async Task<IActionResult> Details(string id)
     {
         var houseExists = await houseService.HouseExistsByIdAsync(id);
 
@@ -127,7 +128,7 @@ public class HouseController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(string id) 
+    public async Task<IActionResult> Edit(string id)
     {
         var houseExists = await houseService.HouseExistsByIdAsync(id);
         if (!houseExists)
@@ -187,8 +188,20 @@ public class HouseController : Controller
             return RedirectToAction("Mine", "House");
         }
 
-        await houseService.EditHouseByIdAsync(id, houseModel);
 
-        return RedirectToAction("Mine", "House");
+        try
+        {
+            await houseService.EditHouseByIdAsync(id, houseModel);
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError(string.Empty, "Unexpected error occured while editing your house. Please, try again.");
+            houseModel.Categories = await categoryService.AllHouseCategoriesAsync();
+
+            return View(houseModel);
+        }
+
+        TempData[SuccessMessage] = "House was edited successfully!";
+        return RedirectToAction("Details", "House", new { id });
     }
 }

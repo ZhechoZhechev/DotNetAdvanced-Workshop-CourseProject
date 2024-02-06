@@ -128,7 +128,7 @@ public class HouseService : IHouseService
         return allRentedHousesForUser;
     }
 
-    public async Task CreateHouse(HouseFormModel model, string agentId)
+    public async Task<string> CreateHouseAndReturnHouseIdAsync(HouseFormModel model, string agentId)
     {
         var house = new House()
         {
@@ -144,6 +144,8 @@ public class HouseService : IHouseService
 
         await dbContext.Houses.AddAsync(house);
         await dbContext.SaveChangesAsync();
+
+        return house.Id.ToString();
     }
 
     public async Task EditHouseByIdAsync(string houseId, HouseFormModel model)
