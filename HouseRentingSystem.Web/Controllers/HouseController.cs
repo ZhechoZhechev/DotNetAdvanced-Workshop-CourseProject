@@ -1,13 +1,13 @@
 ﻿namespace HouseRentingSystem.Web.Controllers;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using HouseRentingSystem.Services.Interfaces;
-using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.ViewModels.House;
-using static HouseRentingSystem.Common.NotificationsMessages;
+using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.ViewModels.House.ServiceModels;
+using static HouseRentingSystem.Common.NotificationsMessages;
 
 [Authorize]
 public class HouseController : Controller
@@ -124,5 +124,71 @@ public class HouseController : Controller
         var houseModel = await houseService.HouseDetailsByIdAsync(id);
 
         return View(houseModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string id) 
+    {
+        var houseExists = await houseService.HouseExistsByIdAsync(id);
+        if (!houseExists)
+        {
+            TempData[InfoMessage] = "House does not exist!";
+            return RedirectToAction("All", "House");
+        }
+
+        var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
+        if (!isUserAgent)
+        {
+            TempData[InfoMessage] = "You are not an agent! Became agent first.";
+            return RedirectToAction("Become", "Agent");
+        }
+
+        var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
+        var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
+        if (!isAgentHouseOwner)
+        {
+            TempData[InfoMessage] = "You are not owner if this house!";
+            return RedirectToAction("Mine", "House");
+        }
+
+        var houseFormModel = await houseService.GetHouseForEditAsync(id);
+        houseFormModel.Categories = await categoryService.AllHouseCategoriesAsync();
+        return View(houseFormModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(string id, HouseFormModel houseModel)
+    {
+        if (!ModelState.IsValid)
+        {
+            houseModel.Categories = await categoryService.AllHouseCategoriesAsync();
+            return View(houseModel);
+        }
+
+        var houseExists = await houseService.HouseExistsByIdAsync(id);
+        if (!houseExists)
+        {
+            TempData[InfoMessage] = "House does not exist!";
+            return RedirectToAction("All", "House");
+        }
+
+        var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
+        if (!isUserAgent)
+        {
+            TempData[InfoMessage] = "You are not an agent! Became agent first.";
+            return RedirectToAction("Become", "Agent");
+        }
+
+        var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
+        var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
+        if (!isAgentHouseOwner)
+        {
+            TempData[InfoMessage] = "You are not owner if this house!";
+            return RedirectToAction("Mine", "House");
+        }
+
+        await houseService.EditHouseByIdAsync(id, houseModel);
+
+        return RedirectToAction("Mine", "House");
     }
 }

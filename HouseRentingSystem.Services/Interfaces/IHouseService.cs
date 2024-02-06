@@ -19,4 +19,10 @@ public interface IHouseService
     Task<bool> HouseExistsByIdAsync(string houseId);
 
     Task<HouseDetailsViewModel> HouseDetailsByIdAsync(string houseId);
+
+    Task<HouseFormModel> GetHouseForEditAsync(string houseId);
+
+    Task<bool> IsAgentWithIdOwnerHouseWithIdAsync(string houseId, string agentId);
+
+    Task EditHouseByIdAsync(string houseId, HouseFormModel model);
 }

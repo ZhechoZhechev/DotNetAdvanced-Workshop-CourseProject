@@ -60,12 +60,12 @@ public class HouseService : IHouseService
             .Take(queryModel.HousesPerPage)
             .Select(h => new AllHousesViewModel
             {
-               Id = h.Id.ToString(),
-               Title = h.Title,
-               Address = h.Address,
-               ImageUrl = h.ImageUrl,
-               PricePerMonth = h.PricePerMonth,
-               IsRented = h.RenterId.HasValue
+                Id = h.Id.ToString(),
+                Title = h.Title,
+                Address = h.Address,
+                ImageUrl = h.ImageUrl,
+                PricePerMonth = h.PricePerMonth,
+                IsRented = h.RenterId.HasValue
             })
             .ToListAsync();
 
@@ -108,14 +108,14 @@ public class HouseService : IHouseService
     {
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-        if (user == null) 
+        if (user == null)
         {
-            return null; 
+            return null;
         }
 
         var allRentedHousesForUser = user.RentedHouses
             .Where(h => h.IsActive)
-            .Select (h => new AllHousesViewModel() 
+            .Select(h => new AllHousesViewModel()
             {
                 Id = h.Id.ToString(),
                 Title = h.Title,
@@ -130,7 +130,7 @@ public class HouseService : IHouseService
 
     public async Task CreateHouse(HouseFormModel model, string agentId)
     {
-        var house = new House() 
+        var house = new House()
         {
             Title = model.Title,
             Address = model.Address,
@@ -144,6 +144,40 @@ public class HouseService : IHouseService
 
         await dbContext.Houses.AddAsync(house);
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task EditHouseByIdAsync(string houseId, HouseFormModel model)
+    {
+        var house = await dbContext.Houses
+            .Where(h => h.IsActive)
+            .FirstAsync(h => h.Id.ToString() == houseId);
+
+        house.Title = model.Title;
+        house.Address = model.Address;
+        house.Description = model.Description;
+        house.ImageUrl = model.ImageUrl;
+        house.PricePerMonth = model.PricePerMonth;
+        house.CategoryId = model.CategoryId;
+
+        await this.dbContext.SaveChangesAsync();
+    }
+
+    public Task<HouseFormModel> GetHouseForEditAsync(string houseId)
+    {
+        var editModel = dbContext.Houses
+            .Where(h => h.Id.ToString() == houseId)
+            .Select(h => new HouseFormModel()
+            {
+                Title = h.Title,
+                Address = h.Address,
+                Description = h.Description,
+                ImageUrl = h.ImageUrl,
+                PricePerMonth = h.PricePerMonth,
+                CategoryId = h.CategoryId,
+            })
+            .FirstOrDefaultAsync();
+
+        return editModel;
     }
 
     public Task<HouseDetailsViewModel> HouseDetailsByIdAsync(string houseId)
@@ -174,7 +208,18 @@ public class HouseService : IHouseService
     public async Task<bool> HouseExistsByIdAsync(string houseId)
     {
         return await dbContext.Houses
+            .Where(h => h.IsActive)
             .AnyAsync(h => h.Id.ToString() == houseId);
+    }
+
+    public async Task<bool> IsAgentWithIdOwnerHouseWithIdAsync(string houseId, string agentId)
+    {
+        var house = await dbContext.Houses
+            .Where(h => h.IsActive)
+            .FirstOrDefaultAsync(h => h.Id.ToString() == houseId);
+
+        if (house.AgentId.ToString() == agentId) return true;
+        else return false;
     }
 
     public async Task<IEnumerable<IndexViewModel>> LastThreeHousesAsync()
