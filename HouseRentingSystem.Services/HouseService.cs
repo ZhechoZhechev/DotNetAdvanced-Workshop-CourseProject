@@ -148,6 +148,15 @@ public class HouseService : IHouseService
         return house.Id.ToString();
     }
 
+    public async Task DeleteHouseByIdAsync(string houseId)
+    {
+        var houseToSoftDelete = await dbContext.Houses
+            .FirstAsync(h => h.Id.ToString() == houseId);
+        houseToSoftDelete.IsActive = false;
+
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task EditHouseByIdAsync(string houseId, HouseFormModel model)
     {
         var house = await dbContext.Houses
@@ -162,6 +171,21 @@ public class HouseService : IHouseService
         house.CategoryId = model.CategoryId;
 
         await this.dbContext.SaveChangesAsync();
+    }
+
+    public async Task<HouseDeleteViewModel> GetHouseForDeletionAsync(string houseId)
+    {
+        var houseToDelete = await dbContext.Houses
+            .Where(h => h.IsActive && h.Id.ToString() == houseId)
+            .Select(h => new HouseDeleteViewModel()
+            {
+                Address = h.Address,
+                Title = h.Title,
+                ImageUrl = h.ImageUrl
+            })
+            .FirstAsync();
+
+        return houseToDelete;
     }
 
     public Task<HouseFormModel> GetHouseForEditAsync(string houseId)

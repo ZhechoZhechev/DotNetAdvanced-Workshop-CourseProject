@@ -25,4 +25,9 @@ public interface IHouseService
     Task<bool> IsAgentWithIdOwnerHouseWithIdAsync(string houseId, string agentId);
 
     Task EditHouseByIdAsync(string houseId, HouseFormModel model);
+
+    Task<HouseDeleteViewModel> GetHouseForDeletionAsync(string houseId);
+
+    Task DeleteHouseByIdAsync(string houseId);
+
 }
