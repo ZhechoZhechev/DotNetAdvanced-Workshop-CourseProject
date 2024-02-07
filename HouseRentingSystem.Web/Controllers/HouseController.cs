@@ -300,4 +300,33 @@ public class HouseController : Controller
             return RedirectToAction("Mine", "House");
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Leave(string id)
+    {
+        var houseExists = await houseService.HouseExistsByIdAsync(id);
+        if (!houseExists)
+        {
+            TempData[InfoMessage] = "House does not exist!";
+            return RedirectToAction("All", "House");
+        }
+
+        var houseRentedByCurrUser = await houseService.IsUserHouseRentierAsync(id, this.User.GetId());
+        if (!houseRentedByCurrUser)
+        {
+            TempData[ErrorMessage] = "You are not rentier of this house!";
+            return RedirectToAction("All", "House");
+        }
+
+        try
+        {
+            await houseService.LeaveHouse(id);
+            return RedirectToAction("All", "House");
+        }
+        catch (Exception)
+        {
+            TempData[ErrorMessage] = "Something went wrong, please try again later.";
+            return RedirectToAction("Mine", "House");
+        }
+    }
 }

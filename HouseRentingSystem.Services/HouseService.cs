@@ -254,7 +254,7 @@ public class HouseService : IHouseService
             .Where(h => h.IsActive && h.Id.ToString() == houseId)
             .Select(h => h.RenterId.HasValue)
             .FirstAsync();
-            
+
     }
 
     public async Task<bool> IsUserHouseRentierAsync(string houseId, string userId)
@@ -281,9 +281,20 @@ public class HouseService : IHouseService
         return lastThreeHouses;
     }
 
+    public async Task LeaveHouse(string houseId)
+    {
+        var house = await dbContext.Houses
+           .Where(h => h.IsActive)
+           .FirstAsync(h => h.Id.ToString() == houseId);
+
+        house.RenterId = null;
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task RentHouse(string houseId, string userId)
     {
         var house = await dbContext.Houses
+            .Where(h => h.IsActive)
             .FirstAsync(h => h.Id.ToString() == houseId);
 
         house.RenterId = Guid.Parse(userId);
