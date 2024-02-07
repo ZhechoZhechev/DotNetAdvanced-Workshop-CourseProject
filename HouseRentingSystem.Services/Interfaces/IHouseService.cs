@@ -30,4 +30,12 @@ public interface IHouseService
 
     Task DeleteHouseByIdAsync(string houseId);
 
+    Task<bool> IsHouseRentedAsync(string houseId);
+
+    Task<bool> IsUserHouseRentierAsync(string houseId, string userId);
+
+    Task RentHouse(string houseId, string userId);
+
+    Task LeaveHouse(string houseId);
+
 }

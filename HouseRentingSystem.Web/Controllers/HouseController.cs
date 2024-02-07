@@ -271,4 +271,33 @@ public class HouseController : Controller
             return RedirectToAction("Mine", "House");
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Rent(string id)
+    {
+        var houseExists = await houseService.HouseExistsByIdAsync(id);
+        if (!houseExists)
+        {
+            TempData[InfoMessage] = "House does not exist!";
+            return RedirectToAction("All", "House");
+        }
+
+        var isRented = await houseService.IsHouseRentedAsync(id);
+        if (isRented)
+        {
+            TempData[InfoMessage] = "House is already rented, try different house.";
+            return RedirectToAction("All", "House");
+        }
+
+        try
+        {
+            await houseService.RentHouse(id, this.User.GetId());
+            return RedirectToAction("All", "House");
+        }
+        catch (Exception)
+        {
+            TempData[ErrorMessage] = "Something went wrong, please try again later.";
+            return RedirectToAction("Mine", "House");
+        }
+    }
 }

@@ -248,6 +248,22 @@ public class HouseService : IHouseService
         else return false;
     }
 
+    public async Task<bool> IsHouseRentedAsync(string houseId)
+    {
+        return await dbContext.Houses
+            .Where(h => h.IsActive && h.Id.ToString() == houseId)
+            .Select(h => h.RenterId.HasValue)
+            .FirstAsync();
+            
+    }
+
+    public async Task<bool> IsUserHouseRentierAsync(string houseId, string userId)
+    {
+        var house = await dbContext.Houses
+            .FirstAsync(h => h.Id.ToString() == houseId);
+
+        return house.RenterId.ToString() == userId;
+    }
     public async Task<IEnumerable<IndexViewModel>> LastThreeHousesAsync()
     {
         var lastThreeHouses = await this.dbContext.Houses
@@ -263,5 +279,15 @@ public class HouseService : IHouseService
             .ToArrayAsync();
 
         return lastThreeHouses;
+    }
+
+    public async Task RentHouse(string houseId, string userId)
+    {
+        var house = await dbContext.Houses
+            .FirstAsync(h => h.Id.ToString() == houseId);
+
+        house.RenterId = Guid.Parse(userId);
+
+        await dbContext.SaveChangesAsync();
     }
 }
