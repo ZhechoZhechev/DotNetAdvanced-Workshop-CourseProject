@@ -14,21 +14,14 @@
 
         let totalHouses = houseInfo.totalHouses
         let totalRents = houseInfo.totalRents
+        housesCount.textContent = `${totalHouses} Houses`;
+        rentedCount.textContent = `${totalRents} Rents`;
 
-        if (statisticDivInputs.classList.contains("d-none")) {
+        const isHidden = statisticDivInputs.classList.contains("d-none");
 
-            statisticDivInputs.classList.remove("d-none");
-            housesCount.textContent = `${totalHouses} Houses`;
-            rentedCount.textContent = `${totalRents} Rents`;
-            statButton.textContent = "Hide Statistics"
-            statButton.classList.remove("btn-primary")
-            statButton.classList.add("btn-danger")
-        }
-        else {
-            statisticDivInputs.classList.add("d-none");
-            statButton.textContent = "Show Statistics"
-            statButton.classList.remove("btn-danger")
-            statButton.classList.add("btn-primary")
-        }
+        statisticDivInputs.classList.toggle("d-none", !isHidden);
+        statButton.textContent = isHidden ? "Show Statistics" : "Hide Statistics";
+        statButton.classList.toggle("btn-primary", isHidden);
+        statButton.classList.toggle("btn-danger", !isHidden);
     }
 }
