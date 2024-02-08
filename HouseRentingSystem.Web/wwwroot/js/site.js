@@ -1,4 +1,30 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function statistics() {
+    const statisticsURL = "https://localhost:7071/api/statistics";
+    let statButton = document.querySelector("#statistics-button");
+    let statisticDivInputs = document.querySelector("#statistics");
+    let housesCount = document.querySelector("#total-houses");
+    let rentedCount = document.querySelector("#total-rents");
+    statButton.addEventListener("click", getHouseInfo)
 
-// Write your JavaScript code.
+    async function getHouseInfo(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const houseInfo = await ((await fetch(statisticsURL)).json());
+
+        let totalHouses = houseInfo.totalHouses
+        let totalRents = houseInfo.totalRents
+
+        if (statisticDivInputs.classList.contains("d-none")) {
+
+            statisticDivInputs.classList.remove("d-none");
+            housesCount.textContent = `${totalHouses} Houses`;
+            rentedCount.textContent = `${totalRents} Rents`;
+            statButton.textContent = "Hide Statistics"
+        }
+        else {
+            statisticDivInputs.classList.add("d-none");
+            statButton.textContent = "Show Statistics"
+        }
+    }
+}

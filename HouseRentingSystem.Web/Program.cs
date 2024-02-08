@@ -5,8 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
-using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.Infrastructure.ModelBinders;
+using HouseRentingSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Microsoft.Extensions.Options;
 
 public class Program
 {
