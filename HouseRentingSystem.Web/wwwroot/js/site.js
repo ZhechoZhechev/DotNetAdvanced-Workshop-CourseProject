@@ -21,10 +21,14 @@
             housesCount.textContent = `${totalHouses} Houses`;
             rentedCount.textContent = `${totalRents} Rents`;
             statButton.textContent = "Hide Statistics"
+            statButton.classList.remove("btn-primary")
+            statButton.classList.add("btn-danger")
         }
         else {
             statisticDivInputs.classList.add("d-none");
             statButton.textContent = "Show Statistics"
+            statButton.classList.remove("btn-danger")
+            statButton.classList.add("btn-primary")
         }
     }
 }
