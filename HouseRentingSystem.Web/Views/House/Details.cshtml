@@ -1,5 +1,18 @@
 ﻿@model HouseDetailsViewModel
 
+@using HouseRentingSystem.Services.Interfaces
+@using HouseRentingSystem.Web.Infrastructure.Extensions
+
+@inject IHouseService HouseService
+@inject IAgentService AgentService
+@{
+    var userId = this.User.GetId();
+    var houseId = Model.Id.ToString();
+    bool isUserAgent = await AgentService.AgentExistsByUserIdAsync(userId);
+    bool isAgentOwner = await AgentService.AgentOwnsHouse(userId, houseId);
+    bool isUserRenterOfTheHouse = await HouseService.IsUserHouseRentierAsync(houseId, userId);
+}
+
 @{
     ViewBag.Title = "House Details";
 }
@@ -26,13 +39,14 @@
             <div class="form-inline">
                 @if (this.User.Identity.IsAuthenticated)
                 {
-                    <a class="btn btn-warning" asp-controller="House" asp
-                       action="Edit"
-                       asp-route-id="@Model.Id">Edit</a>
-                    <a class="ml-2 btn btn-danger" asp-controller="House" asp
-                       action="Delete"
-                       asp-route-id="@Model.Id">Delete</a>
-                    @if (!Model.IsRented)
+                    @if (isUserAgent && isAgentOwner)
+                    {
+                        <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
+                           asp-route-id="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
+                           asp-route-id="@Model.Id">Delete</a>
+                    }
+                    @if (!Model.IsRented && !isAgentOwner)
                     {
                         <form class="ml-2" asp-controller="House"
                               asp-action="Rent" asp-route-id="@Model.Id"
@@ -41,7 +55,7 @@
                                    value="Rent" />
                         </form>
                     }
-                    else
+                    else if (isUserRenterOfTheHouse)
                     {
                         <form class="ml-2" asp-controller="House" asp-action="Leave"
                               asp-route-id="@Model.Id" method="post">

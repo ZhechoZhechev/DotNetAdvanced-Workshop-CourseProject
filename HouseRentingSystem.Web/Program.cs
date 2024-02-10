@@ -10,6 +10,7 @@ using HouseRentingSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
 
 public class Program
 {
@@ -41,6 +42,7 @@ public class Program
             .AddMvcOptions(opt =>
             {
                 opt.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
         builder.Services.AddServicesReflection(typeof(IHouseService));
 

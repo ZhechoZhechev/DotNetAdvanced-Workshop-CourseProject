@@ -13,4 +13,6 @@ public interface IAgentService
     Task CreateAgentAsync(string userId, BecomeAgentFormModel model);
 
     Task<string?> AgentIdByUserIdAsync(string userId);
+
+    Task<bool> AgentOwnsHouse(string userId, string houseId);
 }

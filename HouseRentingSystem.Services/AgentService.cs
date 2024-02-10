@@ -37,6 +37,18 @@ public class AgentService : IAgentService
         return agent.Id.ToString();    
     }
 
+    public async Task<bool> AgentOwnsHouse(string userId, string houseId)
+    {
+        var agent = await dbContext.Agents
+            .Include(h => h.ManagedHouses)
+            .FirstOrDefaultAsync(a => a.UserId.ToString() == userId);
+        if (agent == null) return false;
+
+        houseId = houseId.ToLower();
+        return agent.ManagedHouses
+            .Any(h => h.Id.ToString() == houseId);
+    }
+
     public async Task CreateAgentAsync(string userId, BecomeAgentFormModel model)
     {
         var newAgent = new Agent
