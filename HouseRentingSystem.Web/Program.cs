@@ -39,6 +39,7 @@ public class Program
             options.Password.RequiredLength =
                 builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
         })
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<HouseRentingSystemDbContext>();
 
         builder.Services.AddControllersWithViews()

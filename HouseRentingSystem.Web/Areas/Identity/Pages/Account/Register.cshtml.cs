@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using HouseRentingSystem.Data.Models;
 using static HouseRentingSystem.Common.EntityValidationConstants.UserConstants;
+using System.Security.Claims;
 
 [AllowAnonymous]
 public class RegisterModel : PageModel
@@ -79,6 +80,12 @@ public class RegisterModel : PageModel
             };
 
             var result = await userManager.CreateAsync(user, Input.Password);
+
+            await this.userManager.AddClaimsAsync(user, new Claim[]
+            {
+                new Claim ("FirtName", Input.FirstName),
+                new Claim("LastName", Input.LastName)
+            });
 
             if (result.Succeeded)
             {

@@ -74,7 +74,7 @@ public class LoginModel : PageModel
                     new Claim("FirstName", user.FirstName),
                     new Claim("LastName", user.LastName)
                 }; 
-                await signInManager.SignInWithClaimsAsync(user, true, customClaims);
+                await signInManager.SignInWithClaimsAsync(user, false, customClaims);
 
                 return LocalRedirect(returnUrl);
             }

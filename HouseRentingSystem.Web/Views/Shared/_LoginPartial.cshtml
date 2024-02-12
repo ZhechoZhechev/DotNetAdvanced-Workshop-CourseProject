@@ -8,6 +8,7 @@
 @inject IAgentService AgentService;
 @{
     bool isUserAgent = await AgentService.AgentExistsByUserIdAsync(this.User.GetId());
+
 }
 
 
