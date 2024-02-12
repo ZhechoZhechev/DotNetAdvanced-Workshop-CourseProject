@@ -27,6 +27,19 @@ public class AgentService : IAgentService
             .AnyAsync(a => a.UserId.ToString() == userId);
     }
 
+    public async Task<string> AgentFullNamesByHouseId(string houseId)
+    {
+        var fullName = await dbContext.Houses
+            .Where(h => h.Id.ToString() == houseId)
+            .Select(h => h.Agent.User.FirstName + " " + h.Agent.User.LastName)
+            .FirstOrDefaultAsync();
+
+        if (fullName == null)
+            return "Unknown Agent";
+
+        return fullName;
+    }
+
     public async Task<string?> AgentIdByUserIdAsync(string userId)
     {
         var agent = await dbContext.Agents
@@ -34,7 +47,7 @@ public class AgentService : IAgentService
 
         if (agent == null) return null;
 
-        return agent.Id.ToString();    
+        return agent.Id.ToString();
     }
 
     public async Task<bool> AgentOwnsHouse(string userId, string houseId)

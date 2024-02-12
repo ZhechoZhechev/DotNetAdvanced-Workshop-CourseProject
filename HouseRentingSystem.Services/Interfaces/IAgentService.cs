@@ -15,4 +15,6 @@ public interface IAgentService
     Task<string?> AgentIdByUserIdAsync(string userId);
 
     Task<bool> AgentOwnsHouse(string userId, string houseId);
+
+    Task<string> AgentFullNamesByHouseId(string houseId);
 }

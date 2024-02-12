@@ -11,6 +11,8 @@
     bool isUserAgent = await AgentService.AgentExistsByUserIdAsync(userId);
     bool isAgentOwner = await AgentService.AgentOwnsHouse(userId, houseId);
     bool isUserRenterOfTheHouse = await HouseService.IsUserHouseRentierAsync(houseId, userId);
+
+    var fullName = await AgentService.AgentFullNamesByHouseId(houseId);
 }
 
 @{
@@ -37,7 +39,7 @@
             <p>Category: <b>@Model.Category</b></p>
             <p><i>(@(Model.IsRented ? "Rented" : "Not Rented"))</i></p>
             <div class="form-inline">
-                @if (this.User.Identity.IsAuthenticated)
+                @if (this.User.Identity?.IsAuthenticated ?? false)
                 {
                     @if (isUserAgent && isAgentOwner)
                     {
@@ -69,6 +71,7 @@
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">Agent Info</h5>
+                    <p class="card-text">Full Name:  @fullName</p>
                     <p class="card-text">Email:  @Model.Agent.Email</p>
                     <p class="card-text">Phone Number: @Model.Agent.PhoneNumber</p>
                 </div>
