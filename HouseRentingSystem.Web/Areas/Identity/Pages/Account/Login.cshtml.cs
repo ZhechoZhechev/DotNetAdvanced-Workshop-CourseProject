@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using HouseRentingSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 [AllowAnonymous]
 public class LoginModel : PageModel
@@ -62,11 +63,19 @@ public class LoginModel : PageModel
     {
         returnUrl ??= Url.Content("~/");
 
+        var user = await signInManager.UserManager.FindByEmailAsync(Input.Email);
+
         if (ModelState.IsValid)
         {
-            var result = await signInManager.PasswordSignInAsync(Input.Email, Input.Password, true, lockoutOnFailure: false);
-            if (result.Succeeded)
+            var isValid = await signInManager.UserManager.CheckPasswordAsync(user, Input.Password);
+            if (isValid)
             {
+                var customClaims = new[] {
+                    new Claim("FirstName", user.FirstName),
+                    new Claim("LastName", user.LastName)
+                }; 
+                await signInManager.SignInWithClaimsAsync(user, true, customClaims);
+
                 return LocalRedirect(returnUrl);
             }
             else
