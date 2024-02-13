@@ -28,7 +28,7 @@
                class="btn btn-success">Details</a>
             @if (this.User.Identity?.IsAuthenticated ?? false)
             {
-                @if (isUserAgent && isAgentOwner)
+                @if ((isUserAgent && isAgentOwner) || User.IsUserAdmin())
                 {
                     <a asp-controller="House" asp-action="Edit" asp-route-id="@Model.Id"
                        class="btn btn-warning">Edit</a>
@@ -36,12 +36,16 @@
                        class="btn btn-danger">Delete</a>
                 }
                 <p></p>
-                @if (!Model.IsRented && !isAgentOwner)
+                @if (!Model.IsRented) 
                 {
-                    <form class="input-group-sm" asp-controller="House"
-                          asp-action="Rent" asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Rent" />
-                    </form>
+                    @if (!isAgentOwner || User.IsUserAdmin())
+                    {
+                        <form class="input-group-sm" asp-controller="House"
+                              asp-action="Rent" asp-route-id="@Model.Id" method="post">
+                            <input class="btn btn-primary" type="submit" value="Rent" />
+                        </form>
+                    }
+
                 }
                 else if (isUserRenterOfTheHouse)
                 {

@@ -70,7 +70,10 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.AddUserInAdnimRole(AdminEmail);
+        if (app.Environment.IsDevelopment())
+        {
+            app.AddUserInAdnimRole(AdminEmail);
+        }
 
         app.MapDefaultControllerRoute();
         app.MapRazorPages();

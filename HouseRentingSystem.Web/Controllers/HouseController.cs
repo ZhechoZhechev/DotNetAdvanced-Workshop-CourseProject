@@ -139,7 +139,7 @@ public class HouseController : Controller
         }
 
         var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
-        if (!isUserAgent)
+        if (!isUserAgent && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not an agent! Became agent first.";
             return RedirectToAction("Become", "Agent");
@@ -175,7 +175,7 @@ public class HouseController : Controller
         }
 
         var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
-        if (!isUserAgent)
+        if (!isUserAgent && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not an agent! Became agent first.";
             return RedirectToAction("Become", "Agent");
@@ -217,7 +217,7 @@ public class HouseController : Controller
         }
 
         var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
-        if (!isUserAgent)
+        if (!isUserAgent && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not an agent! Became agent first.";
             return RedirectToAction("Become", "Agent");
@@ -246,7 +246,7 @@ public class HouseController : Controller
         }
 
         var isUserAgent = await agentService.AgentExistsByUserIdAsync(this.User.GetId());
-        if (!isUserAgent)
+        if (!isUserAgent && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not an agent! Became agent first.";
             return RedirectToAction("Become", "Agent");

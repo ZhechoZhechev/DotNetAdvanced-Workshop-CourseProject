@@ -41,21 +41,25 @@
             <div class="form-inline">
                 @if (this.User.Identity?.IsAuthenticated ?? false)
                 {
-                    @if (isUserAgent && isAgentOwner)
+                    @if ((isUserAgent && isAgentOwner) || User.IsUserAdmin())
                     {
                         <a class="btn btn-warning" asp-controller="House" asp-action="Edit"
                            asp-route-id="@Model.Id">Edit</a>
                         <a class="ml-2 btn btn-danger" asp-controller="House" asp-action="Delete"
                            asp-route-id="@Model.Id">Delete</a>
                     }
-                    @if (!Model.IsRented && !isAgentOwner)
+                    @if (!Model.IsRented)
                     {
-                        <form class="ml-2" asp-controller="House"
-                              asp-action="Rent" asp-route-id="@Model.Id"
-                              method="post">
-                            <input class="btn btn-primary" type="submit"
-                                   value="Rent" />
-                        </form>
+                        @if (!isAgentOwner || User.IsUserAdmin())
+                        {
+                            <form class="ml-2" asp-controller="House"
+                                  asp-action="Rent" asp-route-id="@Model.Id"
+                                  method="post">
+                                <input class="btn btn-primary" type="submit"
+                                       value="Rent" />
+                            </form>
+                        }
+
                     }
                     else if (isUserRenterOfTheHouse)
                     {
