@@ -8,7 +8,13 @@
 @inject IAgentService AgentService;
 @{
     bool isUserAgent = await AgentService.AgentExistsByUserIdAsync(this.User.GetId());
-
+    string firstName = string.Empty;
+    string lastName = string.Empty;
+    if (User.Identity.IsAuthenticated)
+    {
+        firstName = User.FindFirst("FirstName")?.Value ?? User.Claims.FirstOrDefault(x => x.Type == "FirstName")!.Value;
+        lastName = User.FindFirst("LastName")?.Value ?? User.Claims.FirstOrDefault(x => x.Type == "LastName")!.Value;
+    }
 }
 
 
@@ -16,7 +22,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @User.FindFirst("FirstName")!.Value @User.FindFirst("LastName")!.Value!</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello, @firstName @lastName!</a>
         </li>
         @if (!isUserAgent)
         {

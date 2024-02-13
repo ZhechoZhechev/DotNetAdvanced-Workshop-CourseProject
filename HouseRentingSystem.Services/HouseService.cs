@@ -219,6 +219,7 @@ public class HouseService : IHouseService
                 ImageUrl = h.ImageUrl,
                 PricePerMonth = h.PricePerMonth,
                 Category = h.Category.Name,
+                IsRented = h.RenterId.HasValue,
                 Agent = new AgentInfoViewModel()
                 {
                     Email = h.Agent.User.Email!,
