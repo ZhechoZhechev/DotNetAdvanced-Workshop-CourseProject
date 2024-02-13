@@ -1,19 +1,16 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using HouseRentingSystem.Data;
 namespace HouseRentingSystem.Web;
 
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
+using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.Infrastructure.ModelBinders;
-using HouseRentingSystem.Services.Interfaces;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Mvc;
+
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
 
 public class Program
 {
@@ -70,7 +67,10 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
+
+        app.AddUserInAdnimRole(AdminEmail);
 
         app.MapDefaultControllerRoute();
         app.MapRazorPages();

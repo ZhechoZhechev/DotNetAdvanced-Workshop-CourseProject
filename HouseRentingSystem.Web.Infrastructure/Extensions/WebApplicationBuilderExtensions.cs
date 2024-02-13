@@ -1,9 +1,13 @@
 ﻿namespace HouseRentingSystem.Web.Infrastructure.Extensions;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Reflection;
 
+using HouseRentingSystem.Data.Models;
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
 public static class WebApplicationBuilderExtensions
 {
     /// <summary>
@@ -27,5 +31,42 @@ public static class WebApplicationBuilderExtensions
 
             services.AddScoped(interfaceType, implementationType);
         }
+    }
+
+    /// <summary>
+    /// creating the admin role and assingning it to a user via his email
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="adminEmail"> users email</param>
+    /// <returns></returns>
+    public static IApplicationBuilder AddUserInAdnimRole(this IApplicationBuilder app, string adminEmail)
+    {
+        using IServiceScope scopedService = app.ApplicationServices.CreateScope();
+
+        IServiceProvider serviceProvier = scopedService.ServiceProvider;
+
+        UserManager<ApplicationUser> userManager =
+            serviceProvier.GetService<UserManager<ApplicationUser>>()!;
+        RoleManager<IdentityRole<Guid>> roleManager = 
+            serviceProvier.GetService<RoleManager<IdentityRole<Guid>>>()!;
+
+        Task.Run(async () =>
+        {
+            if (await roleManager.RoleExistsAsync(AdminRoleName))
+            {
+                return;
+            }
+
+            var role = new IdentityRole<Guid>(AdminRoleName);
+            await roleManager.CreateAsync(role);
+
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            await userManager.AddToRoleAsync(adminUser, AdminRoleName);
+        })
+            .GetAwaiter()
+            .GetResult();
+
+        return app;
     }
 }
