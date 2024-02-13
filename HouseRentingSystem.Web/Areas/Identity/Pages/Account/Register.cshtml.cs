@@ -79,13 +79,10 @@ public class RegisterModel : PageModel
                 LastName = Input.LastName
             };
 
-            var result = await userManager.CreateAsync(user, Input.Password);
+            TempData["FirstName"] = Input.FirstName;
+            TempData["LastName"] = Input.LastName;
 
-            await this.userManager.AddClaimsAsync(user, new Claim[]
-            {
-                new Claim ("FirtName", Input.FirstName),
-                new Claim("LastName", Input.LastName)
-            });
+            var result = await userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
