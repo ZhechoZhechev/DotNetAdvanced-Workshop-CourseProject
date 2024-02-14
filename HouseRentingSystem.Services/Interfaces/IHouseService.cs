@@ -12,9 +12,9 @@ public interface IHouseService
 
     Task<HousesQueryServiceModel> AllAsync(AllHousesQueryModel queryModel);
 
-    Task<ICollection<AllHousesViewModel>> AllHousesByAgentIdAsync(string agentId);
+    Task<List<AllHousesViewModel>> AllAgentHousesByUserId(string agentId);
 
-    Task<ICollection<AllHousesViewModel>> AllHousesByUserIdAsync(string userId);
+    Task<List<AllHousesViewModel>> AllHousesByUserIdAsync(string userId);
 
     Task<bool> HouseExistsByIdAsync(string houseId);
 

@@ -61,7 +61,7 @@ public class AgentController : Controller
             return RedirectToAction("Index", "Home");
         }
 
-        return RedirectToAction("All", "Houses");
+        return RedirectToAction("All", "House");
     }
 
     private async Task<bool> CheckIfUserIsAgentAsync()

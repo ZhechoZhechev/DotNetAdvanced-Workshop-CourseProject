@@ -95,13 +95,19 @@ public class HouseController : Controller
     [HttpGet]
     public async Task<IActionResult> Mine()
     {
-        IEnumerable<AllHousesViewModel> allHouses;
+        List<AllHousesViewModel> allHouses = new List<AllHousesViewModel>();
 
         var userId = this.User.GetId();
-
-        if (await agentService.AgentExistsByUserIdAsync(userId))
+        var userIsAgent = await agentService.AgentExistsByUserIdAsync(userId);
+        if (User.IsUserAdmin() || userIsAgent)
         {
-            allHouses = await houseService.AllHousesByAgentIdAsync(userId);
+            allHouses = await houseService.AllAgentHousesByUserId(userId);
+            allHouses.AddRange(await houseService.AllHousesByUserIdAsync(userId));
+
+            allHouses = allHouses.
+                DistinctBy(h => h.Id)
+                .ToList();
+
         }
         else
         {
@@ -147,7 +153,7 @@ public class HouseController : Controller
 
         var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
         var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
-        if (!isAgentHouseOwner)
+        if (!isAgentHouseOwner && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not owner if this house!";
             return RedirectToAction("Mine", "House");
@@ -183,7 +189,7 @@ public class HouseController : Controller
 
         var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
         var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
-        if (!isAgentHouseOwner)
+        if (!isAgentHouseOwner && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not owner if this house!";
             return RedirectToAction("Mine", "House");
@@ -225,7 +231,7 @@ public class HouseController : Controller
 
         var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
         var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
-        if (!isAgentHouseOwner)
+        if (!isAgentHouseOwner && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not owner if this house!";
             return RedirectToAction("Mine", "House");
@@ -254,7 +260,7 @@ public class HouseController : Controller
 
         var agentId = await agentService.AgentIdByUserIdAsync(this.User.GetId());
         var isAgentHouseOwner = await houseService.IsAgentWithIdOwnerHouseWithIdAsync(id, agentId!);
-        if (!isAgentHouseOwner)
+        if (!isAgentHouseOwner && !User.IsUserAdmin())
         {
             TempData[InfoMessage] = "You are not owner if this house!";
             return RedirectToAction("Mine", "House");

@@ -78,7 +78,7 @@ public class HouseService : IHouseService
         };
     }
 
-    public async Task<ICollection<AllHousesViewModel>> AllHousesByAgentIdAsync(string userId)
+    public async Task<List<AllHousesViewModel>> AllAgentHousesByUserId(string userId)
     {
         var agent = await dbContext.Agents
             .Include(h => h.ManagedHouses)
@@ -104,9 +104,10 @@ public class HouseService : IHouseService
         return allHousesModel;
     }
 
-    public async Task<ICollection<AllHousesViewModel>> AllHousesByUserIdAsync(string userId)
+    public async Task<List<AllHousesViewModel>> AllHousesByUserIdAsync(string userId)
     {
         var user = await dbContext.Users
+            .Include(h => h.RentedHouses)
             .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
         if (user == null)
         {
