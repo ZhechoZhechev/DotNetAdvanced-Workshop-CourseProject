@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
+using System.Reflection;
+
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
+using HouseRentingSystem.Services.Mapping;
 using HouseRentingSystem.Services.Interfaces;
+using HouseRentingSystem.Web.ViewModels.Home;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.Infrastructure.ModelBinders;
 
@@ -49,7 +53,8 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+
         if (app.Environment.IsDevelopment())
         {
             app.UseMigrationsEndPoint();
