@@ -2,7 +2,10 @@
 
 using System.ComponentModel.DataAnnotations;
 
-public class HouseDeleteViewModel
+using HouseRentingSystem.Data.Models;
+using HouseRentingSystem.Services.Mapping;
+
+public class HouseDeleteViewModel : IMapFrom<House>
 {
     public string Address { get; set; } = null!;
 

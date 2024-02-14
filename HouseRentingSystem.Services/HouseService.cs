@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using HouseRentingSystem.Data;
 using HouseRentingSystem.Data.Models;
+using HouseRentingSystem.Services.Mapping;
 using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.ViewModels.Home;
 using HouseRentingSystem.Web.ViewModels.Agent;
@@ -131,17 +132,10 @@ public class HouseService : IHouseService
 
     public async Task<string> CreateHouseAndReturnHouseIdAsync(HouseFormModel model, string agentId)
     {
-        var house = new House()
-        {
-            Title = model.Title,
-            Address = model.Address,
-            Description = model.Description,
-            ImageUrl = model.ImageUrl,
-            PricePerMonth = model.PricePerMonth,
-            CategoryId = model.CategoryId,
-            IsActive = true,
-            AgentId = Guid.Parse(agentId)
-        };
+
+        var house = AutoMapperConfig.MapperInstance.Map<House>(model);
+        house.IsActive = true;
+        house.AgentId = Guid.Parse(agentId);
 
         await dbContext.Houses.AddAsync(house);
         await dbContext.SaveChangesAsync();
@@ -178,12 +172,7 @@ public class HouseService : IHouseService
     {
         var houseToDelete = await dbContext.Houses
             .Where(h => h.IsActive && h.Id.ToString() == houseId)
-            .Select(h => new HouseDeleteViewModel()
-            {
-                Address = h.Address,
-                Title = h.Title,
-                ImageUrl = h.ImageUrl
-            })
+            .To<HouseDeleteViewModel>()
             .FirstAsync();
 
         return houseToDelete;
@@ -272,12 +261,7 @@ public class HouseService : IHouseService
             .Where(h => h.IsActive)
             .OrderByDescending(h => h.CreatedOn)
             .Take(3)
-            .Select(h => new IndexViewModel
-            {
-                Id = h.Id.ToString(),
-                Title = h.Title,
-                ImageUrl = h.ImageUrl
-            })
+            .To<IndexViewModel>()
             .ToArrayAsync();
 
         return lastThreeHouses;
