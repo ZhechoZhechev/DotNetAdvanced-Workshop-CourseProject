@@ -37,7 +37,7 @@
                 <label asp-for="Input.LastName" class="form-label">Last Name</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <recaptcha-v3 id="registerSubmit" form-id="registerForm" action="submit" class="w-100 btn btn-lg btn-primary">Register</recaptcha-v3>
         </form>
     </div>
 </div>

@@ -49,7 +49,9 @@ public class Program
                 opt.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
                 opt.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
             });
+
         builder.Services.AddServicesReflection(typeof(IHouseService));
+        builder.Services.AddRecaptchaService();
 
         var app = builder.Build();
 

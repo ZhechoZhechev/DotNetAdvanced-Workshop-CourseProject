@@ -12,8 +12,8 @@
     string lastName = string.Empty;
     if (User.Identity.IsAuthenticated)
     {
-        firstName = User.FindFirst("FirstName")?.Value ?? TempData["FirstName"]?.ToString() ?? string.Empty;
-        lastName = User.FindFirst("LastName")?.Value ?? TempData["LastName"]?.ToString() ?? string.Empty;
+        firstName = User.FindFirst("FirstName")?.Value ?? TempData.Peek("FirstName")?.ToString() ?? string.Empty;
+        lastName = User.FindFirst("LastName")?.Value ?? TempData.Peek("LastName")?.ToString() ?? string.Empty;
     }
 }
 

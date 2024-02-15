@@ -5,14 +5,16 @@ using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using Griesoft.AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using HouseRentingSystem.Data.Models;
 using static HouseRentingSystem.Common.EntityValidationConstants.UserConstants;
-using System.Security.Claims;
 
 [AllowAnonymous]
+[ValidateRecaptcha(Action = "submit",
+    ValidationFailedAction = ValidationFailedAction.ContinueRequest)]
 public class RegisterModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> signInManager;

@@ -11,8 +11,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using HouseRentingSystem.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Griesoft.AspNetCore.ReCaptcha;
 
 [AllowAnonymous]
+[ValidateRecaptcha(Action = "submit",
+    ValidationFailedAction = ValidationFailedAction.ContinueRequest)]
 public class LoginModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> signInManager;
@@ -58,6 +61,7 @@ public class LoginModel : PageModel
 
         ReturnUrl = returnUrl;
     }
+
 
     public async Task<IActionResult> OnPostAsync(string returnUrl = null)
     {
