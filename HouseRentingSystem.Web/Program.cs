@@ -53,6 +53,11 @@ public class Program
         builder.Services.AddServicesReflection(typeof(IHouseService));
         builder.Services.AddRecaptchaService();
 
+        builder.Services.ConfigureApplicationCookie(opt =>
+        {
+            opt.AccessDeniedPath = "Home/Error/401";
+        });
+
         var app = builder.Build();
 
         AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
@@ -82,8 +87,16 @@ public class Program
             app.AddUserInAdnimRole(AdminEmail);
         }
 
-        app.MapDefaultControllerRoute();
-        app.MapRazorPages();
+        app.UseEndpoints(config =>
+        {
+            config.MapControllerRoute(
+            name: "areas",
+            pattern: "/{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            );
+
+            config.MapDefaultControllerRoute();
+            config.MapRazorPages();
+        });
 
         app.Run();
     }

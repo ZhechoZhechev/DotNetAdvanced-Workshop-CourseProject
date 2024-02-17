@@ -25,7 +25,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRentingSystem.Web.Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRentingSystem.WebAPI", "HouseRentingSystem.WebAPI\HouseRentingSystem.WebAPI.csproj", "{DFF6C55F-F44D-4E67-89B7-AEADFCFD874F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HouseRentingSystem.Services.Mapping", "HouseRentingSystem.Services.Mapping\HouseRentingSystem.Services.Mapping.csproj", "{D9A53A1D-8D92-4CEE-8AD6-EB38881D415D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HouseRentingSystem.Services.Mapping", "HouseRentingSystem.Services.Mapping\HouseRentingSystem.Services.Mapping.csproj", "{D9A53A1D-8D92-4CEE-8AD6-EB38881D415D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{699B8FEE-DF5F-4045-BAB9-5C04A7B39293}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
