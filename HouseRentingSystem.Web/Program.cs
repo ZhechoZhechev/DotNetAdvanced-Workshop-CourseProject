@@ -55,7 +55,7 @@ public class Program
 
         builder.Services.ConfigureApplicationCookie(opt =>
         {
-            opt.AccessDeniedPath = "Home/Error/401";
+            opt.AccessDeniedPath = "/Home/Error/401";
         });
 
         var app = builder.Build();
