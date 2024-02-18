@@ -287,4 +287,17 @@ public class HouseService : IHouseService
 
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<RentedHousesViewModel>> AllRentedHousesAsync()
+    {
+        var rentedHousesModel = await dbContext.Houses
+            .Include(h => h.Agent)
+            .Include(h => h.Agent.User)
+            .Include(h => h.Renter)
+            .Where(h => h.IsActive && h.RenterId.HasValue)
+            .To<RentedHousesViewModel>()
+            .ToArrayAsync();
+
+        return rentedHousesModel;
+    }
 }

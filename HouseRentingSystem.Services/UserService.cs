@@ -1,12 +1,14 @@
 ﻿namespace HouseRentingSystem.Services;
 
-using HouseRentingSystem.Data;
-using HouseRentingSystem.Services.Interfaces;
-using HouseRentingSystem.Services.Mapping;
-using HouseRentingSystem.Web.ViewModels.User;
 using Microsoft.EntityFrameworkCore;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using HouseRentingSystem.Data;
+using HouseRentingSystem.Services.Interfaces;
+using HouseRentingSystem.Web.ViewModels.User;
+using HouseRentingSystem.Services.Mapping;
 
 public class UserService : IUserService
 {

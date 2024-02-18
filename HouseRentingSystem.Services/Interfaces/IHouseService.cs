@@ -38,4 +38,5 @@ public interface IHouseService
 
     Task LeaveHouse(string houseId);
 
+    Task<IEnumerable<RentedHousesViewModel>> AllRentedHousesAsync();
 }
