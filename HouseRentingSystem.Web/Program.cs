@@ -12,6 +12,7 @@ using HouseRentingSystem.Services.Mapping;
 using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.ViewModels.Home;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
+using HouseRentingSystem.Web.Infrastructure.Middlewares;
 using HouseRentingSystem.Web.Infrastructure.ModelBinders;
 
 using static HouseRentingSystem.Common.GeneralApplicationConstants;
@@ -81,6 +82,8 @@ public class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<OnlineUsersMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {

@@ -7,6 +7,8 @@ using HouseRentingSystem.Services.Mapping;
 
 public class UserViewModel : IMapFrom<Agent>, IMapFrom<ApplicationUser>, IHaveCustomMappings
 {
+    public string UserId { get; set; } = null!;
+
     public string Email { get; set; } = null!;
 
     public string FullName { get; set; } = null!;
@@ -20,6 +22,7 @@ public class UserViewModel : IMapFrom<Agent>, IMapFrom<ApplicationUser>, IHaveCu
             .ForMember(a => a.FullName, opt => opt.MapFrom(s => $"{s.User.FirstName} {s.User.LastName}"));
 
         configuration.CreateMap<ApplicationUser, UserViewModel>()
+            .ForMember(a => a.UserId, opt => opt.MapFrom(s => s.Id))
             .ForMember(u => u.PhoneNumber, opt => opt.MapFrom(s => string.Empty))
             .ForMember(u => u.FullName, opt => opt.MapFrom(s => $"{s.FirstName} {s.LastName}"));
     }
