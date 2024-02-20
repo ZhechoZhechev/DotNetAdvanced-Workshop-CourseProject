@@ -1,27 +1,44 @@
-﻿using HouseRentingSystem.Services.Interfaces;
+﻿namespace HouseRentingSystem.Web.Areas.Admin.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace HouseRentingSystem.Web.Areas.Admin.Controllers
+using HouseRentingSystem.Services.Interfaces;
+using HouseRentingSystem.Web.ViewModels.House;
+
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
+
+
+public class HomeController : BaseAdminController
 {
-    public class HomeController : BaseAdminController
+    public readonly IHouseService houseService;
+    private readonly IMemoryCache memoryCache;
+
+    public HomeController(IHouseService houseService, IMemoryCache memoryCache)
     {
-        public readonly IHouseService houseService;
+        this.houseService = houseService;
+        this.memoryCache = memoryCache;
+    }
 
-        public HomeController(IHouseService houseService)
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    public async Task<IActionResult> AllRented()
+    {
+        var AllRentedViewModel = memoryCache.Get<IEnumerable<RentedHousesViewModel>>(RentedHousesCacheKey);
+
+        if (AllRentedViewModel == null)
         {
-            this.houseService = houseService;
+            AllRentedViewModel = await houseService.AllRentedHousesAsync();
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(RentedHousesMemoryCacheExpDuration));
+
+            memoryCache.Set(RentedHousesCacheKey, AllRentedViewModel, cacheOptions);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> AllRented() 
-        {
-            var AllRentedViewModel = await houseService.AllRentedHousesAsync();
-
-            return View(AllRentedViewModel);
-        }
+        return View(AllRentedViewModel);
     }
 }

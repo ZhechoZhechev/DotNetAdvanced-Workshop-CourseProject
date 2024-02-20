@@ -2,12 +2,15 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 using HouseRentingSystem.Services.Interfaces;
 using HouseRentingSystem.Web.ViewModels.House;
 using HouseRentingSystem.Web.Infrastructure.Extensions;
 using HouseRentingSystem.Web.ViewModels.House.ServiceModels;
+
 using static HouseRentingSystem.Common.NotificationsMessages;
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
 
 [Authorize]
 public class HouseController : Controller
@@ -15,14 +18,18 @@ public class HouseController : Controller
     private readonly ICategoryService categoryService;
     private readonly IAgentService agentService;
     private readonly IHouseService houseService;
+    private readonly IMemoryCache memoryCache;
+    
     public HouseController(
         ICategoryService categoryService,
         IAgentService agentService,
-        IHouseService houseService)
+        IHouseService houseService,
+        IMemoryCache memoryCache)
     {
         this.categoryService = categoryService;
         this.agentService = agentService;
         this.houseService = houseService;
+        this.memoryCache = memoryCache;
     }
 
     [AllowAnonymous]
@@ -298,6 +305,8 @@ public class HouseController : Controller
         try
         {
             await houseService.RentHouse(id, this.User.GetId());
+            memoryCache.Remove(RentedHousesCacheKey);
+
             return RedirectToAction("All", "House");
         }
         catch (Exception)
@@ -327,6 +336,8 @@ public class HouseController : Controller
         try
         {
             await houseService.LeaveHouse(id);
+            memoryCache.Remove(RentedHousesCacheKey);
+
             return RedirectToAction("All", "House");
         }
         catch (Exception)

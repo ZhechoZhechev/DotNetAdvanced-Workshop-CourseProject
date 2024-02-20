@@ -14,6 +14,9 @@ public static class GeneralApplicationConstants
     public const string UsersCacheKey = "UsersCache";
     public const int UserMemoryCacheExpDuration = 5;
 
+    public const string RentedHousesCacheKey = "RentedHouses";
+    public const int RentedHousesMemoryCacheExpDuration = 5;
+
     public const string OnlineUsersCookieName = "IsOnline";
     public const int LastActivityBeforeOfflineMinutes = 10;
 }

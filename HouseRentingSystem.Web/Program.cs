@@ -53,6 +53,7 @@ public class Program
 
         builder.Services.AddServicesReflection(typeof(IHouseService));
         builder.Services.AddRecaptchaService();
+        builder.Services.AddMemoryCache();
 
         builder.Services.ConfigureApplicationCookie(opt =>
         {
