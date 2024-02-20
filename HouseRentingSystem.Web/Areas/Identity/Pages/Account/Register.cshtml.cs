@@ -3,14 +3,16 @@ namespace HouseRentingSystem.Web.Areas.Identity.Pages.Account;
 
 using System.ComponentModel.DataAnnotations;
 
+using Griesoft.AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Griesoft.AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using HouseRentingSystem.Data.Models;
 using static HouseRentingSystem.Common.EntityValidationConstants.UserConstants;
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
 
 [AllowAnonymous]
 [ValidateRecaptcha(Action = "submit",
@@ -19,13 +21,17 @@ public class RegisterModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> signInManager;
     private readonly UserManager<ApplicationUser> userManager;
+    private readonly IMemoryCache memoryCache;
 
     public RegisterModel(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        IMemoryCache memoryCache)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
+
+        this.memoryCache = memoryCache;
     }
 
     [BindProperty]
@@ -89,6 +95,8 @@ public class RegisterModel : PageModel
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
+                memoryCache.Remove(UsersCacheKey);
+
                 return LocalRedirect(returnUrl);
             }
             foreach (var error in result.Errors)

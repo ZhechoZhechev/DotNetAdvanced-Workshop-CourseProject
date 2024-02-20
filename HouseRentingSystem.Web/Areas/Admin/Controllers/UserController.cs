@@ -1,22 +1,39 @@
-﻿using HouseRentingSystem.Services.Interfaces;
+﻿namespace HouseRentingSystem.Web.Areas.Admin.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace HouseRentingSystem.Web.Areas.Admin.Controllers
+using HouseRentingSystem.Services.Interfaces;
+using HouseRentingSystem.Web.ViewModels.User;
+
+using static HouseRentingSystem.Common.GeneralApplicationConstants;
+public class UserController : BaseAdminController
 {
-    public class UserController : BaseAdminController
+    private readonly IUserService userService;
+    private readonly IMemoryCache memoryCache;
+
+    public UserController(IUserService userService, IMemoryCache memoryCache)
     {
-        private readonly IUserService userService;
+        this.userService = userService;
+        this.memoryCache = memoryCache;
+    }
 
-        public UserController(IUserService userService)
+    [ResponseCache(Duration = 30)]
+    public async Task<IActionResult> All()
+    {
+        var allUsersModel = memoryCache.Get<IEnumerable<UserViewModel>>(UsersCacheKey);
+
+        if (allUsersModel == null)
         {
-            this.userService = userService;
+            allUsersModel = await userService.AllUsersAsync();
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(UserMemoryCacheExpDuration));
+
+            memoryCache.Set(UsersCacheKey, allUsersModel, cacheOptions);
         }
 
-        public async Task<IActionResult> All()
-        {
-            var allUsersModel = await userService.AllUsersAsync();
 
-            return View(allUsersModel);
-        }
+        return View(allUsersModel);
     }
 }

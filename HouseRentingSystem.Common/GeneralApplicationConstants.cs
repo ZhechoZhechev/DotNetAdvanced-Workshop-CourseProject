@@ -11,6 +11,9 @@ public static class GeneralApplicationConstants
     public const string AdminRoleName = "Administrator";
     public const string AdminEmail = "Admin@houserentingsystem.com";
 
+    public const string UsersCacheKey = "UsersCache";
+    public const int UserMemoryCacheExpDuration = 5;
+
     public const string OnlineUsersCookieName = "IsOnline";
     public const int LastActivityBeforeOfflineMinutes = 10;
 }
