@@ -18,7 +18,6 @@ public class UserController : BaseAdminController
         this.memoryCache = memoryCache;
     }
 
-    [ResponseCache(Duration = 30)]
     public async Task<IActionResult> All()
     {
         var allUsersModel = memoryCache.Get<IEnumerable<UserViewModel>>(UsersCacheKey);

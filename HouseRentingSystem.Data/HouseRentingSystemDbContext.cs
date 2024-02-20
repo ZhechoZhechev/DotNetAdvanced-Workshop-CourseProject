@@ -1,17 +1,22 @@
 ﻿namespace HouseRentingSystem.Data;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-using HouseRentingSystem.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using System.Reflection;
+
+using HouseRentingSystem.Data.Models;
 
 public class HouseRentingSystemDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public HouseRentingSystemDbContext(DbContextOptions<HouseRentingSystemDbContext> options)
         : base(options)
     {
+        if (!Database.IsRelational())
+        {
+            Database.EnsureCreated();
+        }
     }
 
     public DbSet<Agent> Agents { get; set; }
