@@ -24,6 +24,11 @@ public class HouseService : IHouseService
         this.dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Search engine by search term and category
+    /// </summary>
+    /// <param name="queryModel">query model</param>
+    /// <returns></returns>
     public async Task<HousesQueryServiceModel> AllAsync(AllHousesQueryModel queryModel)
     {
         IQueryable<House> housesQuery = dbContext.Houses
