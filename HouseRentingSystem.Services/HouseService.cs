@@ -84,6 +84,11 @@ public class HouseService : IHouseService
         };
     }
 
+    /// <summary>
+    /// returns all houeses managed by a certain agent
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<List<AllHousesViewModel>> AllAgentHousesByUserId(string userId)
     {
         var agent = await dbContext.Agents
@@ -110,6 +115,11 @@ public class HouseService : IHouseService
         return allHousesModel;
     }
 
+    /// <summary>
+    /// returns all houses rented by certain user
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<List<AllHousesViewModel>> AllHousesByUserIdAsync(string userId)
     {
         var user = await dbContext.Users
@@ -134,7 +144,12 @@ public class HouseService : IHouseService
             .ToList();
         return allRentedHousesForUser;
     }
-
+    /// <summary>
+    /// creates a house and returns the ID of house created
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="agentId"></param>
+    /// <returns></returns>
     public async Task<string> CreateHouseAndReturnHouseIdAsync(HouseFormModel model, string agentId)
     {
 
@@ -148,6 +163,11 @@ public class HouseService : IHouseService
         return house.Id.ToString();
     }
 
+    /// <summary>
+    /// turns house prop active to false(not deleting if from DB)
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public async Task DeleteHouseByIdAsync(string houseId)
     {
         var houseToSoftDelete = await dbContext.Houses
@@ -157,6 +177,12 @@ public class HouseService : IHouseService
         await dbContext.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// edits a house by ID
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <param name="model"></param>
+    /// <returns></returns>
     public async Task EditHouseByIdAsync(string houseId, HouseFormModel model)
     {
         var house = await dbContext.Houses
