@@ -198,7 +198,11 @@ public class HouseService : IHouseService
 
         await this.dbContext.SaveChangesAsync();
     }
-
+    /// <summary>
+    /// returns the house entity that is to be deleted
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public async Task<HouseDeleteViewModel> GetHouseForDeletionAsync(string houseId)
     {
         var houseToDelete = await dbContext.Houses
@@ -208,7 +212,11 @@ public class HouseService : IHouseService
 
         return houseToDelete;
     }
-
+    /// <summary>
+    /// retunrs the house entity that is to be edited
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public Task<HouseFormModel> GetHouseForEditAsync(string houseId)
     {
         var editModel = dbContext.Houses
@@ -224,9 +232,13 @@ public class HouseService : IHouseService
             })
             .FirstOrDefaultAsync();
 
-        return editModel;
+        return editModel!;
     }
-
+    /// <summary>
+    /// returns house details by provided ID
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public Task<HouseDetailsViewModel> HouseDetailsByIdAsync(string houseId)
     {
         var houseModel = dbContext.Houses
