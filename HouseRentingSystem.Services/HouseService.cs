@@ -264,14 +264,23 @@ public class HouseService : IHouseService
 
         return houseModel;
     }
-
+    /// <summary>
+    /// Check if a house exists by given ID
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public async Task<bool> HouseExistsByIdAsync(string houseId)
     {
         return await dbContext.Houses
             .Where(h => h.IsActive)
             .AnyAsync(h => h.Id.ToString() == houseId);
     }
-
+    /// <summary>
+    /// Check if agent with given ID owns a house with certain ID
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <param name="agentId"></param>
+    /// <returns></returns>
     public async Task<bool> IsAgentWithIdOwnerHouseWithIdAsync(string houseId, string agentId)
     {
         var house = await dbContext.Houses
