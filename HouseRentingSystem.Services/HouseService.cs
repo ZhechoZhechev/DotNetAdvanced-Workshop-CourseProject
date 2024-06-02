@@ -290,7 +290,11 @@ public class HouseService : IHouseService
         if (house.AgentId.ToString() == agentId) return true;
         else return false;
     }
-
+    /// <summary>
+    /// Returns a bool for if the house is rented for a certain ID
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <returns></returns>
     public async Task<bool> IsHouseRentedAsync(string houseId)
     {
         return await dbContext.Houses
@@ -299,7 +303,12 @@ public class HouseService : IHouseService
             .FirstAsync();
 
     }
-
+    /// <summary>
+    /// Returns a bool for if a certain user is a rentier of a certain house
+    /// </summary>
+    /// <param name="houseId"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<bool> IsUserHouseRentierAsync(string houseId, string userId)
     {
         var house = await dbContext.Houses
